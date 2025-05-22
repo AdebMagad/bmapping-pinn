@@ -485,15 +485,7 @@ if __name__ == '__main__':
         p_error_DR = p - p_DR  # shape (3, N)
         q_error_DR= q - q_DR  # shape (3, N)
         
-        # squared_error_UKF = np.sum(p_error_UKF ** 2, axis=0)  # sum over x, y, z
-        # squared_error_DR = np.sum(p_error_DR ** 2, axis=0)  # sum over x, y, z
         
-        
-        # rmse_UKF = np.sqrt(squared_error_UKF)  # RMSE per timestep
-        # rmse_DR = np.sqrt(squared_error_DR)  # RMSE per timestep
-        
-        # error_UKFs.append(np.vstack([p_error_UKF,q_error_UKF]))
-        # error_DRs.append(np.vstack([p_error_DR,q_error_DR]))
         error_UKFs.append(p_error_UKF)
         error_DRs.append(p_error_DR)
         
@@ -507,55 +499,16 @@ if __name__ == '__main__':
     error_UKFs = np.array(error_UKFs)  # shape (experiments, N)
     error_DRs = np.array(error_DRs)
 
-# Compute mean and standard deviation
-    # rmse_UKF = np.sqrt(np.sum(np.square(error_UKFs), axis=(0,1))/experiments)
-    # # std_rmse_UKF = np.std(rmse_array_UKF, axis=0)
-    # rmse_DR = np.sqrt(np.sum(np.square(error_DRs), axis=(0,1))/experiments)
-    # std_rmse_DR = np.std(rmse_array_DR, axis=0)
-    # print("mean RMSE_UKF: {:6.e}".format(np.mean(rmse_UKF)))
-    # print("mean RMSE_DR: {:6.e}".format(np.mean(rmse_DR)))
+
     rmse_UKF = np.sqrt(np.sum(np.square(error_UKFs), axis=(0,1))/experiments)
     # std_rmse_UKF = np.std(rmse_array_UKF, axis=0)
     rmse_DR = np.sqrt(np.sum(np.square(error_DRs), axis=(0,1))/experiments)
     
 
-    
-    # Plotting RMSE with error bars
-    # plt.figure()
-    # plt.errorbar(range(N), mean_rmse_UKF, label='UKF RMSE', color='blue', linewidth=1.5)
-    # plt.errorbar(range(N), mean_rmse_DR, label='Odometry RMSE', color='green', linewidth=1.5)
-    # plt.xlabel('$t$(s)')
-    # plt.ylabel('RMSE (m)')
-    # plt.title('RMSE Across 100 Experiments')
-    # plt.legend()
-    # plt.grid(True)
-    # plt.tight_layout()
-    # plt.show()
-
    
 # End of simulation
 
-# UKF: Plot shaded area and mean line
-# plt.figure(figsize=(10, 6))
-# plt.fill_between(
-# range(N),
-# mean_rmse_UKF - std_rmse_UKF,
-# mean_rmse_UKF + std_rmse_UKF,
-# color='blue',
-# alpha=0.2,
-# label='UKF ±1 Std Dev'
-# )
 plt.plot(range(N), rmse_UKF, color='blue', linewidth=1.5, label='UKF RMSE')
-
-# Odometry: Plot shaded area and mean line
-# plt.fill_between(
-# range(N),
-# mean_rmse_DR - std_rmse_DR,
-# mean_rmse_DR + std_rmse_DR,
-# color='green',
-# alpha=0.2,
-# label='Odometry ±1 Std Dev'
-# )
 plt.plot(range(N), rmse_DR, color='green', linewidth=1.5, label='Odometry RMSE')
 
 # Labels and title
@@ -617,11 +570,6 @@ workspace = {'p': p, 'q': q, "p_UKF": p_UKF,
         'q_0_gt': q_0, 'N_val': N_val,'p': p, 'q': q, 'p_DR': p_DR, 'q_DR': q_DR, 'delta_p': delta_p,
         'delta_q': delta_q,}
 savemat(('Workspace.mat'), workspace)
-    
-  
-    
-    
-    
     
     
     

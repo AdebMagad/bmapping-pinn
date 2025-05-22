@@ -43,9 +43,7 @@ pinn_model = tf.keras.models.load_model(model_path)
 
 L = 1
 N_val = 100
-#x_test_np = np.random.default_rng().uniform(low = -L, high = L, size = (N_val, 1))
-#y_test_np = np.random.default_rng().uniform(low = -L, high = L, size = (N_val, 1))
-#z_test_np = np.ones((N_val, 1))*0.3
+
 x_test_np_grid = np.linspace(-L, L, N_val)
 y_test_np_grid = np.linspace(-L, L, N_val)
 z_test_np_grid = np.linspace(-L, L, N_val)
@@ -65,12 +63,6 @@ inputs = tf.concat([x_test, y_test, z_test], axis = 1)
 temp_final = np.array([B(x_test_np[i], y_test_np[i], z_test_np[i]) for i in range(N_val**3)])
 temp_final = temp_final.reshape((N_val, N_val, N_val, 3))
 model_output = tf.reshape(pinn_model.call(inputs), [N_val, N_val, N_val, 3])
-
-np.save("mesh_x.npy", xx);
-np.save("mesh_y.npy", yy);
-np.save("mesh_z.npy", zz);
-np.save("B_real.npy", temp_final);
-np.save("B_pred.npy", model_output);
 
 
 B_mag_Predicted = model_output[:,:,:,0]**2 + model_output[:,:, :, 1]**2 + model_output[:, :, :, 2]**2
