@@ -377,7 +377,9 @@ def EKF_UKF_localization(N, delta_p, delta_q, y_mag, q_0, p_0, P_0, p, R_p, R_q,
 if __name__ == '__main__':
     print('Start simulations')
     tic = time.time()
-    model_path = "saved_models/Circular_loops_4x64_N_u_90"
+    # model_path = "saved_models/Circular_loops_4x64_N_u_90"
+    model_path = "saved_models/Circular_loops_Modified"
+
     pinn_model = tf.keras.models.load_model(model_path)
 
 
@@ -392,7 +394,7 @@ if __name__ == '__main__':
     date_str = time.strftime("%d-%b-%Y", current_time)
     foldername = 'LocalisationMCResultsLengthscales/Run' + date_str + '-' + str(time_vec[3]) + '-' + str(time_vec[4])
 
-    experiments = 100
+    experiments = 50
     
 
     # Set room dimensions
@@ -457,7 +459,7 @@ if __name__ == '__main__':
 
         # Noise parameters
         R_p = 0.0001 * np.eye(3) * T
-        R_q = 0.001 * np.eye(3) * T
+        R_q = 0.0001 * np.eye(3) * T
 
         # Init covariances
         P_0_cov = 0.001 * np.eye(6)

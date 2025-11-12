@@ -9,7 +9,12 @@ from tensorflow.python.ops.variables import trainable_variables
 import tensorflow as tf
 import math
 import matplotlib.pyplot as plt
-
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "sans-serif",
+    "font.sans-serif": "Helvetica",
+    'text.latex.preamble': r'\usepackage{amsfonts}'
+})
 import numpy as np
 import scipy.special as sc
 import matplotlib.pyplot as plt
@@ -38,7 +43,8 @@ def circB(x,y,z):
 def B(x,y,z):
     return 0.6*circB(x + 1.01,y + 1.0,z - 4.0) + 0.2*circB(x - 1.01,y - 1.0, z - 4.0) - 0.8*circB(x + 1.01,y - 1.0,z - 4.0) - 0.5*circB(x - 1.01,y + 1.0,z - 4.0) - 0.98*circB(x + 1.01,y + 1.0,z + 4.0) - 0.46*circB(x - 1.01,y - 1.0,z + 4.0) + 0.35*circB(x + 1.01,y - 1.0,z + 4.0) + 0.87*circB(x - 1.01,y + 1.0,z + 4.0)
 
-model_path = "saved_models/Circular_loops_4x64_N_u_90"
+model_path = "saved_models/trained_pinn_model"
+# model_path = "saved_models/trained_plain_nn_model"
 pinn_model = tf.keras.models.load_model(model_path)
 
 L = 1
@@ -123,5 +129,55 @@ ax.spines['left'].set_linewidth(2)
 cbar = fig.colorbar(c, ax=ax)
 cbar.set_label(r'$x$')
 
+
+L=1
+N_val = 100
+x_test_np_grid = np.linspace(-L, L, N_val)
+y_test_np_grid = np.linspace(-L, L, N_val)
+z_test_np_grid = np.linspace(-L, L, N_val)
+x_test_np = x_test_np_grid.reshape(N_val, 1)
+y_test_np = -0.68
+z_test_np = 0.72
+
+x_test = tf.cast(x_test_np, dtype=tf.float32)
+y_test = tf.fill([N_val,1], y_test_np)
+z_test = tf.fill([N_val,1], z_test_np)
+
+
+inputs = tf.concat([x_test, y_test, z_test], axis = 1)
+temp_final = np.array([B(x_test_np_grid[i], y_test_np, z_test_np) for i in range(N_val)])
+print(temp_final.shape)
+model_output = tf.reshape(pinn_model.call(inputs), [N_val, 3])   
+
+ 
+plt.subplots(1, 3, figsize=(10, 3))
+plt.subplot(131)
+plt.plot(x_test_np, model_output[:,0], "-b", label="Prediction")
+plt.plot( x_test_np, temp_final[:,0], "-g", label="Exact")
+plt.ylim([-3, 3])
+plt.legend(loc="upper left")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$B_x$")
+
+plt.subplot(132)
+plt.plot(x_test_np, model_output[:,1], "-b", label="Prediction")
+plt.plot(x_test_np, temp_final[:,1], "-g", label="Exact")
+plt.ylim([-3, 3])
+plt.title(r"Magnetic field prediction with plain NN at $z=0.72, y=-0.68$")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$B_y$")
+
+plt.subplot(133)
+plt.plot(x_test_np, model_output[:,2], "-b", label="Prediction")
+plt.plot(x_test_np, temp_final[:,2], "-g", label="Exact")
+plt.ylim([-3, 3])
+plt.xlabel(r"$x$")
+plt.ylabel(r"$B_z$")
+
+
+
 plt.tight_layout()
+plt.savefig('fig7.pdf', bbox_inches='tight')
 plt.show()
+
+
