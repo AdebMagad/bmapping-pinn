@@ -1,40 +1,48 @@
 
-# PINN-UKF-SLAM
 
-Physics-informed magnetic-field localization using a Physics-Informed Neural Network (PINN) map and an Unscented Kalman Filter (UKF) estimator.
+# PINN-UKF-SLAM
 
 This repository accompanies the manuscript on magnetic-field-based localization in GPS-denied environments. It contains the trained PINN model, result files, saved workspaces, figures, and supporting materials used to reproduce the main results reported in the paper.
 
-------------------------------------------------------------------
+---
 
 ## 📁 Repository Overview
 
 ```text
 PINN-UKF-SLAM/
-├── figs/                    # Figures used in the manuscript
-├── saved_models/            # Trained PINN model(s)
-├── Workspace.mat            # Saved workspace from simulation runs
-├── pinn_ukf_results.mat     # Main result data
-├── rmse_UKF.csv             # Position RMSE data
-├── rmse_UKF_q.csv           # Orientation RMSE data
-├── rmse_ekf_gpr.mat         # Baseline GPR-EKF results
-├── rmse_ukf_gpr.mat         # Baseline GPR-UKF results
-├── timespent.mat            # Runtime information
-├── requirements.txt         # Python dependencies
+├── Scripts/                    # Main Python scripts for simulation 
+│   ├── pinn_ukf_extended.py    # Baseline PINN-UKF simulation 
+│   ├── map_update.py           # PINN-UKF with online map update 
+│   ├── PINN_Training.py        # Offline training of the PINN model
+│   ├── magnetic_field_plots.py # Magnetic field prediction and 
+│   └── pinn_ukf_real_data.py   # Real-world experimental validation 
+├── Results/                    # Saved outputs and evaluation 
+│   ├── Workspace.mat           # Saved workspace from simulation 
+│   ├── pinn_ukf_results.mat    # Main simulation results
+│   ├── rmse_UKF.csv            # Position RMSE data
+│   ├── rmse_UKF_q.csv          # Orientation RMSE data
+│   ├── rmse_ekf_gpr.mat        # Baseline GPR-EKF results
+│   ├── rmse_ukf_gpr.mat        # Baseline GPR-UKF results
+│   └── timespent.mat           # Runtime statistics
+├── figs/                       # Figures used in the manuscript
+├── saved_models/               # Trained PINN model(s)
+├── datasets/                   # Real-world datasets for 
+├── requirements.txt            # Python dependencies
 └── README.md
 ```
 
-------------------------------------------------------------------
+---
 
 ## 🚀 What This Repository Provides
 
 * A trained PINN magnetic-field model for approximating the ambient magnetic field map
 * A UKF-based localization framework that fuses magnetic measurements and odometry
+* A continual learning mechanism for online map update
 * Saved numerical results for the main simulation study
 * Baseline comparison results against GPR-based methods
-* Figures and data files supporting the manuscript
+* Real-world dataset evaluation scripts
 
--------------------------------------------------------------------
+---
 
 ## ⚙️ Requirements
 
@@ -69,24 +77,78 @@ cd PINN-UKF-SLAM
 pip install -r requirements.txt
 ```
 
-### 3. Verify trained model
+---
 
-Ensure the trained PINN model exists in:
 
-```bash
-saved_models/
-```
 
 ## 📊 Reproducing the Main Results
 
-``````bash
-Run pinn_ukf_extended.py to reproduce the proposed PINN-UKF framework baseline results
-Run map_update.py to reproduce results including the online map update with continual learning
-Run PINN_Training.py to train the PINN model offline
-Run magnetic_field_plots.py to reproduce the magnetic field prediction results.
-Run pinn_ukf_real_data and utilize the /datasets folder to reproduce the experimental results.
+### A. PINN Training (Offline Map Construction)
 
+```bash
+python PINN_Training.py
 ```
+
+---
+
+### B. Magnetic Field Prediction Visualization
+
+```bash
+python magnetic_field_plots.py
+```
+
+---
+
+### C. PINN-UKF Localization (Baseline)
+
+```bash
+python pinn_ukf_extended.py
+```
+
+---
+
+### D. PINN-UKF with Online Map Update
+
+```bash
+python map_update.py
+```
+
+---
+
+### E. Real-World Experimental Validation
+
+```bash
+python pinn_ukf_real_data.py
+```
+
+Ensure the dataset is located in:
+
+```bash
+/datasets/
+```
+
+---
+
+## 📂 Loading Saved Results
+
+### Python
+
+```python
+from scipy.io import loadmat
+
+data = loadmat("Workspace.mat")
+print(data.keys())
+```
+
+### MATLAB
+
+```matlab
+data = load('Workspace.mat');
+whos('-file', 'Workspace.mat')
+```
+
+---
+
 
 ## 📖 Citation
 
@@ -104,6 +166,7 @@ Run pinn_ukf_real_data and utilize the /datasets folder to reproduce the experim
 ## 📬 Contact
 
 **Adeb A. Magad**
+
 📧 [adeb.magad@gmail.com](mailto:adeb.magad@gmail.com)
 
 
