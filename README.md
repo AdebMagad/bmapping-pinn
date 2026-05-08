@@ -153,12 +153,17 @@ whos('-file', 'Workspace.mat')
 ## 📖 Citation
 
 ```bibtex
-@article{magad_pinn_ukf_slam,
-  title   = {Improving the Localization of the Magnetic Field-based SLAM Through a Novel PINN-UKF Framework},
-  author  = {Adeb A. Magad and Muhammad F. Emzir},
-  journal = {IEEE Access},
-  year    = {2026}
-}
+@ARTICLE{11510238,
+  author={Magad, Adeb A. and Emzir, Muhammad F.},
+  journal={IEEE Access}, 
+  title={Improving the Localization of the Magnetic Field-based SLAM Through a Novel PINN-UKF Framework}, 
+  year={2026},
+  volume={},
+  number={},
+  pages={1-1},
+  keywords={Filtering;Filters;Kalman filters;Circuits and systems;Nonlinear filters;Location awareness;Mobile communication;Indoor environment;SIMO;Network architecture;PINNs;UKF;Magnetic Field;Filtering;Continual Learning;SLAM},
+  doi={10.1109/ACCESS.2026.3690969}}
+
 ```
 
 ---
